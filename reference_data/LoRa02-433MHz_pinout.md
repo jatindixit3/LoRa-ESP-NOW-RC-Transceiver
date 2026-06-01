@@ -2,7 +2,9 @@
 
 ## Datasheet
 - AI-Thinker LoRa02 Product Page: https://docs.ai-thinker.com/en/lora/ra-02
-- SX1278 Datasheet (Semtech): https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/2R0000001OKs/Af0607Tj5cmF.0uFaRwovFSLkEiYkVJQfJmDqRiYhfQ
+- Ra-02 Module Datasheet (e-gizmo): https://e-gizmo.net/oc/kits%20documents/LORA%20Module%20RA-02%20V.1/LORA%20rev2.pdf
+- Ra-02 Breakout Datasheet (7SEMI/Evelta): https://evelta.com/content/datasheets/004-7Semi-LoRa-ra-02.pdf
+- SX1276/77/78/79 Datasheet (Semtech, via Adafruit CDN): https://cdn-shop.adafruit.com/product-files/3179/sx1276_77_78_79.pdf
 - RadioLib documentation: https://jgromes.github.io/RadioLib/
 
 ## Module Pinout (RA-02 / LoRa02)

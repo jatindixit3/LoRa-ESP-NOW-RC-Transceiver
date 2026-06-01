@@ -3,6 +3,7 @@
 ## Datasheet
 - ESP32 Datasheet: https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf
 - ESP32 Technical Reference Manual: https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf
+- ESP32-C3 Technical Reference Manual v1.4: https://documentation.espressif.com/esp32-c3_technical_reference_manual_en.pdf
 
 ## 30-Pin DevKit Pinout
 

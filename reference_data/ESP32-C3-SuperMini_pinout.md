@@ -1,8 +1,9 @@
 # ESP32-C3 Super Mini — Pinout Reference
 
 ## Datasheet / TRM
-- ESP32-C3 Technical Reference Manual: https://www.espressif.com/sites/default/files/documentation/esp32-c3_technical_reference_manual_en.pdf
-- ESP32-C3 Datasheet: https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf
+- ESP32-C3 Series Datasheet v2.4: https://documentation.espressif.com/esp32-c3_datasheet_en.pdf
+- ESP32-C3 Technical Reference Manual v1.4 (PDF): https://documentation.espressif.com/esp32-c3_technical_reference_manual_en.pdf
+- ESP32-C3 Technical Reference Manual (HTML): https://documentation.espressif.com/esp32-c3_technical_reference_manual_en.html
 
 ## Super Mini Board Pinout
 
