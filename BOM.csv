@@ -1,0 +1,16 @@
+Reference,Description,Quantity,Unit,Supplier/Part Number,Price (per unit),Price (total),Notes
+TX-MCU,ESP32 DevKit v1 (Wroom-32 30-pin),1,pcs,,"","",Transmitter MCU; fits inside FS-CT6B shell
+RX-MCU,ESP32-C3 Super Mini,1,pcs,,"","",Receiver MCU on drone
+TX-RF,LoRa02 433MHz Module (SX1278 AI-Thinker),1,pcs,,"","",Transmitter LoRa module
+RX-RF,LoRa02 433MHz Module (SX1278 AI-Thinker),1,pcs,,"","",Receiver LoRa module
+ANT1,433MHz Spring/Whip Antenna (SMA),1,pcs,,"","",Transmitter antenna
+ANT2,433MHz Spring/Whip Antenna (SMA),1,pcs,,"","",Receiver antenna
+SW1-4,Mini Momentary/Toggle Switch (SPST),4,pcs,,"","",4 new AUX channels (CH7-CH10) added to FS-CT6B
+R1-8,10K Ohm Resistor 1/4W,8,pcs,,"","",Voltage dividers on ADC inputs (gimbal pots 0-5V to 3.3V)
+C1-4,100nF Ceramic Capacitor,4,pcs,,"","",Decoupling caps on LoRa module VCC
+PROTO-TX,Perfboard / Small Proto PCB,1,pcs,,"","",For mounting ESP32 + LoRa inside FS-CT6B
+PROTO-RX,Perfboard / Small Proto PCB,1,pcs,,"","",For mounting receiver stack on drone
+JST-TX,JST-PH 2-pin connector pair,2,pcs,,"","",Power input connectors
+JST-RX,JST-PH 2-pin connector pair,2,pcs,,"","",Power and SBUS output connectors
+WIRE,28AWG Silicone Wire (assorted colors),1,set,,"","",Internal wiring
+HEAT-SHRINK,Heatshrink tubing assorted,1,pack,,"","",Insulation

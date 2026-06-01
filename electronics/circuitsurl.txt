@@ -1,0 +1,11 @@
+# Wiring Diagram URLs
+# Add CircuitLab (or EasyEDA / KiCad export) URLs here after designing the circuits.
+
+# Transmitter Wiring (ESP32 + LoRa02 inside FS-CT6B):
+TX_DIAGRAM=
+
+# Receiver Wiring (ESP32-C3 Super Mini + LoRa02 + SBUS output):
+RX_DIAGRAM=
+
+# Voltage Divider Sub-circuit (Gimbal pot 5V → 3.3V ESP32 ADC):
+VDIV_DIAGRAM=
