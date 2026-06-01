@@ -1,5 +1,13 @@
 # CLAUDE.md — Drone Transceiver Project
 
+## Rules (non-negotiable)
+- **Arduino IDE only** — all code is `.ino` files. No PlatformIO, no `platformio.ini`, no `src/main.cpp`.
+- **No comments in code** — no `//` lines, no `/* */` blocks, ever. Not a single one.
+- **No co-author in commits** — never add `Co-Authored-By:` or any AI attribution to commit messages.
+- Arduino sketch folder name must match the `.ino` filename (Arduino IDE requirement).
+
+---
+
 ## Project Summary
 Building a custom LoRa + ESP-NOW RC transceiver system to replace/augment the FlySky FS-CT6B 2.4GHz link. The goal is dual-protocol: ESP-NOW (fast, close range) with automatic fallback to LoRa 433MHz (long range).
 
