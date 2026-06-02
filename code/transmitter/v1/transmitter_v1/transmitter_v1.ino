@@ -30,6 +30,8 @@
 #define ESPNOW_TIMEOUT_MS   200
 #define ESPNOW_RETRY_MS    2000
 
+#define CALIBRATE true
+
 typedef struct __attribute__((packed)) {
     uint16_t channels[10];
     uint8_t  rssi;
@@ -49,23 +51,35 @@ uint32_t lastLoraProbe = 0;
 
 uint8_t receiverMAC[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
+int calMin[4] = {4095, 4095, 4095, 4095};
+int calMax[4] = {0, 0, 0, 0};
+
 uint16_t adcToRC(int raw) {
     int v = map(raw, ADC_MIN, ADC_MAX, RC_MIN, RC_MAX);
     return (uint16_t)constrain(v, RC_MIN, RC_MAX);
 }
 
+int readAvg(int pin) {
+    int s = 0;
+    for (int i = 0; i < 8; i++) s += analogRead(pin);
+    return s / 8;
+}
+
 void readChannels() {
-    int s1=0, s2=0, s3=0, s4=0;
-    for (int i = 0; i < 8; i++) {
-        s1 += analogRead(PIN_CH1);
-        s2 += analogRead(PIN_CH2);
-        s3 += analogRead(PIN_CH3);
-        s4 += analogRead(PIN_CH4);
+    int raw[4];
+    raw[0] = readAvg(PIN_CH1);
+    raw[1] = readAvg(PIN_CH2);
+    raw[2] = readAvg(PIN_CH3);
+    raw[3] = readAvg(PIN_CH4);
+
+    if (CALIBRATE) {
+        for (int i = 0; i < 4; i++) {
+            if (raw[i] < calMin[i]) calMin[i] = raw[i];
+            if (raw[i] > calMax[i]) calMax[i] = raw[i];
+        }
     }
-    pkt.channels[0] = adcToRC(s1 / 8);
-    pkt.channels[1] = adcToRC(s2 / 8);
-    pkt.channels[2] = adcToRC(s3 / 8);
-    pkt.channels[3] = adcToRC(s4 / 8);
+
+    for (int i = 0; i < 4; i++) pkt.channels[i] = adcToRC(raw[i]);
 
     pkt.channels[4] = digitalRead(PIN_CH5) ? RC_MAX : RC_MIN;
     pkt.channels[5] = digitalRead(PIN_CH6) ? RC_MAX : RC_MIN;
@@ -135,14 +149,34 @@ void setup() {
     pinMode(PIN_CH10, INPUT_PULLUP);
     initEspNow();
     initLora();
+    if (CALIBRATE) Serial.println("CALIBRATION MODE — move all sticks to full extents then back to center");
 }
 
 void loop() {
     static uint32_t lastTx = 0;
+    static uint32_t lastPrint = 0;
+
     if (millis() - lastTx < 14) return;
     lastTx = millis();
 
     readChannels();
+
+    if (CALIBRATE && millis() - lastPrint > 500) {
+        lastPrint = millis();
+        Serial.print("RAW  CH1:");  Serial.print(readAvg(PIN_CH1));
+        Serial.print(" CH2:");      Serial.print(readAvg(PIN_CH2));
+        Serial.print(" CH3:");      Serial.print(readAvg(PIN_CH3));
+        Serial.print(" CH4:");      Serial.println(readAvg(PIN_CH4));
+        Serial.print("MIN  CH1:");  Serial.print(calMin[0]);
+        Serial.print(" CH2:");      Serial.print(calMin[1]);
+        Serial.print(" CH3:");      Serial.print(calMin[2]);
+        Serial.print(" CH4:");      Serial.println(calMin[3]);
+        Serial.print("MAX  CH1:");  Serial.print(calMax[0]);
+        Serial.print(" CH2:");      Serial.print(calMax[1]);
+        Serial.print(" CH3:");      Serial.print(calMax[2]);
+        Serial.print(" CH4:");      Serial.println(calMax[3]);
+        Serial.println("---");
+    }
 
     uint32_t now = millis();
     bool espnowTimedOut = (now - lastEspNowAck) > ESPNOW_TIMEOUT_MS;
