@@ -76,13 +76,10 @@ Wire one terminal to GPIO, other terminal to GND. Enable INPUT_PULLUP.
 
 ## Known Issues / v1 Problems
 
-*(Fill in as issues are discovered during testing)*
-
-- [ ] ESP32 ADC non-linearity at low end (0–100mV) may cause stick drift at extremes
-- [ ] Gimbal calibration needed after wiring (map raw ADC range to 1000–2000 µs)
+- [x] Gimbal pots (CH1–CH4) read frozen garbage values — root cause: pot VCC and GND were never connected. Floating ADC pins picked up switch/wire interference and appeared to jump when switches were flipped. Fix: wire all pot VCC ends to ESP32 3.3V pin and GND ends to GND.
+- [x] ESP-NOW init failure not handled — if esp_now_init() fails the code continues and never falls back to LoRa, leaving the transmitter silent.
 
 ---
 
 ## v1 → v2 Trigger Conditions
-- If ADC noise is too high → add hardware RC filter (100Ω + 10µF) on each ADC input
-- If ESP32 doesn't fit inside FS-CT6B shell → redesign PCB layout or use ESP32-C3 Super Mini for TX too
+- Pot wiring confirmed missing (VCC/GND not connected) → bumping to v2 with fix + ESP-NOW failure fallback
