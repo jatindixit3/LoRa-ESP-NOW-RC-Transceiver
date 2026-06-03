@@ -107,7 +107,7 @@ void initEspNow() {
 
 void initLora() {
     SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
-    int state = lora.begin(433.0, 125.0, 9, 7, 0x34, 17, 8);
+    int state = lora.begin(433.0, 125.0, 7, 7, 0x34, 17, 8);
     if (state == RADIOLIB_ERR_NONE) {
         loraReady = true;
         Serial.println("LoRa ready");
