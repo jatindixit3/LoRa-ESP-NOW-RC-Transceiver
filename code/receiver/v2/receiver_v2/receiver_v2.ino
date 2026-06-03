@@ -3,14 +3,14 @@
 #include <SPI.h>
 #include <RadioLib.h>
 
-#define LORA_SCK   8
-#define LORA_MISO  9
-#define LORA_MOSI  10
-#define LORA_CS    3
-#define LORA_RST   4
-#define LORA_IRQ   5
+#define LORA_SCK   7
+#define LORA_MISO  8
+#define LORA_MOSI  9
+#define LORA_CS    1
+#define LORA_RST   3
+#define LORA_IRQ   4
 
-#define SBUS_TX_PIN    2
+#define SBUS_TX_PIN    43
 #define SBUS_BAUD      100000
 #define SBUS_NUM_CH    16
 #define SBUS_FRAME_LEN 25
