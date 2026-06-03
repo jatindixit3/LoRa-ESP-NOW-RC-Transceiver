@@ -29,6 +29,8 @@ typedef struct __attribute__((packed)) {
 SPIClass spi1(HSPI);
 SX1278 lora = new Module(LORA_CS, LORA_IRQ, LORA_RST, RADIOLIB_NC, spi1);
 
+uint8_t transmitterMAC[] = {0x10, 0x06, 0x1C, 0xF6, 0x7B, 0x10};
+
 RCPacket lastPkt;
 uint32_t lastPacketTime = 0;
 
@@ -77,6 +79,11 @@ void initEspNow() {
         Serial.println("ESP-NOW init failed");
         return;
     }
+    esp_now_peer_info_t peer = {};
+    memcpy(peer.peer_addr, transmitterMAC, 6);
+    peer.channel = 0;
+    peer.encrypt = false;
+    esp_now_add_peer(&peer);
     esp_now_register_recv_cb(onEspNowRecv);
     Serial.println("ESP-NOW ready");
 }
