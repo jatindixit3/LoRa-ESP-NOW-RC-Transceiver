@@ -55,14 +55,10 @@ Do not connect 5V directly to the ESP32-C3 3.3V pin — use a voltage regulator.
 
 ## Known Issues / v1 Problems
 
-*(Fill in as issues are discovered during testing)*
-
-- [ ] ESP32-C3 ADC is not used (receive-only), but WiFi/BLE init may cause brief spikes — monitor power supply stability
-- [ ] First ESP-NOW packet may be dropped on cold start (~200ms WiFi init time)
+- [x] ESP32-C3 Super Mini USB CDC never produced any serial output despite USB CDC On Boot being enabled. Board appeared to upload successfully but Serial Monitor showed nothing — MAC address line never printed, no boot output at all. Root cause unconfirmed (possibly faulty board, possibly USB CDC silicon bug on this batch).
+- [x] Because serial was dead, impossible to confirm ESP-NOW or LoRa init status.
 
 ---
 
 ## v1 → v2 Trigger Conditions
-- If SBUS timing jitter > 1ms → switch to hardware UART with DMA
-- If LoRa range insufficient → increase spreading factor (SF) at cost of latency
-- If ESP-NOW range too short → use directional antenna or increase TX power
+- ESP32-C3 Super Mini replaced with XIAO ESP32-S3 Sense — reliable USB CDC, more capable chip, camera available for future use
