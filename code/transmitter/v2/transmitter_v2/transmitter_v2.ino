@@ -49,7 +49,7 @@ uint32_t lastLoraProbe = 0;
 
 bool loraReady = false;
 
-uint8_t receiverMAC[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t receiverMAC[] = {0x1C, 0xDB, 0xD4, 0x36, 0xF5, 0xB4};
 
 int readAvg(int pin) {
     int s = 0;
