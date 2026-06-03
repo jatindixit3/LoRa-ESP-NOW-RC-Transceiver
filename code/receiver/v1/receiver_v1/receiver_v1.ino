@@ -65,7 +65,7 @@ void sendSbus(bool frameLost, bool failsafe) {
     Serial1.write(frame, SBUS_FRAME_LEN);
 }
 
-void onEspNowRecv(const esp_now_recv_info_t *info, const uint8_t *data, int len) {
+void onEspNowRecv(const uint8_t *mac, const uint8_t *data, int len) {
     if (len != sizeof(RCPacket)) return;
     memcpy(&lastPkt, data, sizeof(RCPacket));
     lastPacketTime = millis();
