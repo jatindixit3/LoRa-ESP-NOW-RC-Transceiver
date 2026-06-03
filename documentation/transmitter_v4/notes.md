@@ -22,3 +22,4 @@
 ### Thermal
 - L7805 runs warm under LoRa TX load (9V → 5V at up to 500mA = up to 2W dissipation)
 - Heatsink attached to L7805 — required, not optional
+- If overheating persists, swap L7805 for a buck converter (e.g. MP1584) — drops ~0.1W instead of 2W
