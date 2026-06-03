@@ -24,3 +24,10 @@
 
 ### Assembly
 - Hot glue applied on all important joints for short circuit prevention and mechanical strength
+- ESP32 and all components housed inside the FS-CT6B shell with the original shell closed
+
+### WiFi Config Portal
+- SSID: Jatins Drone Transmitter
+- Password: JatinDixit
+- Connect within ~10 seconds of powering on — the AP is always running but some devices may drop and reconnect once before stabilising
+- If connection drops, simply reconnect to the same network and navigate to 192.168.4.1
