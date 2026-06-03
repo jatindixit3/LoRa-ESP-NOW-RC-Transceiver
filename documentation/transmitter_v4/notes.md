@@ -21,3 +21,6 @@
 
 ### Thermal
 - Heatsink attached to L7805
+
+### Assembly
+- Hot glue applied on all important joints for short circuit prevention and mechanical strength
