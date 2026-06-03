@@ -26,7 +26,7 @@ typedef struct __attribute__((packed)) {
     uint32_t seq;
 } RCPacket;
 
-SPIClass spi1(FSPI);
+SPIClass spi1(HSPI);
 SX1278 lora = new Module(LORA_CS, LORA_IRQ, LORA_RST, RADIOLIB_NC, spi1);
 
 RCPacket lastPkt;
