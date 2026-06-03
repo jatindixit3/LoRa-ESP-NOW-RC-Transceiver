@@ -5,6 +5,12 @@
 - Calibration, channel reversal, trim, expo all configurable via browser
 - All settings saved to EEPROM, persist across power cycles
 
+## Known Issue
+- lora.transmit() is blocking — while on LoRa fallback, the WiFi AP starves every 14ms causing phone/tablet to drop connection after 1-2 minutes
+
+## v4 → v5 Trigger
+- Replaced blocking lora.transmit() with non-blocking lora.startTransmit() + ISR flag
+
 ---
 
 ## Power System (Confirmed Working)
