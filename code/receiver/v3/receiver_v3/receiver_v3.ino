@@ -97,7 +97,7 @@ void IRAM_ATTR loraISR() {
 
 void initLora() {
     spi1.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
-    int state = lora.begin(433.0, 125.0, 7, 7, 0x34, 17, 8);
+    int state = lora.begin(433.0, 125.0, 9, 7, 0x34, 17, 8);
     if (state != RADIOLIB_ERR_NONE) {
         Serial.print("LoRa init failed: ");
         Serial.println(state);
@@ -129,8 +129,11 @@ void setup() {
     Serial.print("MAC: ");
     Serial.println(WiFi.macAddress());
     Serial1.begin(SBUS_BAUD, SERIAL_8E2, -1, SBUS_TX_PIN, true);
-    for (int i = 0; i < 10; i++) lastPkt.channels[i] = 1500;
-    lastPkt.channels[2] = 1000;
+    lastPkt.channels[0] = 1500;
+    lastPkt.channels[1] = 1500;
+    lastPkt.channels[2] = 987;
+    lastPkt.channels[3] = 1500;
+    for (int i = 4; i < 10; i++) lastPkt.channels[i] = 1000;
     lastPacketTime = millis();
     initEspNow();
     initLora();
