@@ -155,8 +155,12 @@ void sendBle() {
     bleGamepad.setY( (int16_t)map(pkt.channels[1], 1000, 2000, -32767, 32767));
     bleGamepad.setZ( (int16_t)map(pkt.channels[2],  987, 2000, -32767, 32767));
     bleGamepad.setRZ((int16_t)map(pkt.channels[3], 1000, 2000, -32767, 32767));
-    for (int i = 0; i < 6; i++)
-        bleGamepad.setButton(i + 1, pkt.channels[4 + i] >= 1500);
+    for (int i = 0; i < 6; i++) {
+        if (pkt.channels[4 + i] >= 1500)
+            bleGamepad.press(BUTTON_1 + i);
+        else
+            bleGamepad.release(BUTTON_1 + i);
+    }
     bleGamepad.sendReport();
 }
 
