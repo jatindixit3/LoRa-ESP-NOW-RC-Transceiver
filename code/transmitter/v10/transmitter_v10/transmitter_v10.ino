@@ -56,6 +56,9 @@ const int rcMinDefault[4] = {1000, 1000, 987, 1000};
 int calMin[4] = {200, 200, 200, 200};
 int calMax[4] = {3895, 3895, 3895, 3895};
 int calMid[4];
+float smoothedADC[4] = {0, 0, 0, 0};
+
+#define SMOOTH_ALPHA 0.3f
 
 BleGamepad bleGamepad("Drone TX", "ESP32", 100);
 bool bleWasConnected = false;
@@ -75,13 +78,19 @@ uint16_t adcToRC(int raw, int ch) {
     int v = (raw <= mid)
         ? map(raw, mn, mid, rcMin, rcMid)
         : map(raw, mid, mx, rcMid, RC_MAX);
-    return (uint16_t)constrain(v, rcMin, RC_MAX);
+    v = constrain(v, rcMin, RC_MAX);
+    if (ch == 0) v = rcMin + RC_MAX - v;
+    return (uint16_t)v;
 }
 
 void readChannels() {
     int pins[4] = {PIN_CH1, PIN_CH2, PIN_CH3, PIN_CH4};
-    for (int i = 0; i < 4; i++)
-        pkt.channels[i] = adcToRC(readAvg(pins[i]), i);
+    for (int i = 0; i < 4; i++) {
+        float raw = (float)readAvg(pins[i]);
+        if (smoothedADC[i] == 0.0f) smoothedADC[i] = raw;
+        smoothedADC[i] = SMOOTH_ALPHA * raw + (1.0f - SMOOTH_ALPHA) * smoothedADC[i];
+        pkt.channels[i] = adcToRC((int)smoothedADC[i], i);
+    }
     pkt.channels[4] = digitalRead(PIN_CH5)  ? RC_MAX : RC_MIN;
     pkt.channels[5] = digitalRead(PIN_CH6)  ? RC_MAX : RC_MIN;
     pkt.channels[6] = digitalRead(PIN_CH7)  ? RC_MAX : RC_MIN;
