@@ -24,7 +24,7 @@ The system automatically uses ESP-NOW when the drone is close and seamlessly swi
 | Side        | MCU                  | RF Module         |
 |-------------|----------------------|-------------------|
 | Transmitter | ESP32 DevKit v1      | LoRa02 433 MHz    |
-| Receiver    | ESP32-C3 Super Mini  | LoRa02 433 MHz    |
+| Receiver    | ESP32-XIAO-C6        | LoRa02 433 MHz    |
 
 The transmitter ESP32 is installed **inside** the FS-CT6B shell, wired directly to the gimbal potentiometers and switches (bypassing the original STM8 MCU and 2.4 GHz RF module).
 
