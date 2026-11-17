@@ -371,7 +371,7 @@ channels:CH_NAMES.map((n,i)=>({src:i,rev:false,min:1000,center:1500,max:2000,db:
 mixer:[{on:true,src:3,dst:0,rate:15,off:0,sw:'none'},{on:false,src:2,dst:6,rate:100,off:0,sw:'0:down'}],
 radio:{
 espnow:{mac:'AA:BB:CC:DD:EE:FF',wifiCh:1,txPower:20,enc:false,pmk:'',lmkOn:false,lmk:'',rate:200,ackTimeout:200,beacon:1000},
-lora:{freq:433.175,tune:0,bw:125,sf:7,cr:5,power:17,sync:'0x12',preamble:8,crc:true,implicit:false,payload:16},
+lora:{freq:433,tune:0,bw:125,sf:7,cr:7,power:17,sync:'0x34',preamble:8,crc:true,implicit:false,payload:25},
 fb:{primary:'auto',trigger:'ack',rssiThr:-95,recover:1000,hud:true}
 },
 cal:[0,1,2,3].map(()=>({min:HW.min,center:HW.c,max:HW.max,db:30,div:'1:1',rt:10,rb:10})),
@@ -672,7 +672,7 @@ field('Coding rate',sel('radio.lora.cr',[[5,'4/5'],[6,'4/6'],[7,'4/7'],[8,'4/8']
 field('TX power',rng('radio.lora.power',{min:2,max:20,unit:' dBm'}),'Output power of the SX1278 PA_BOOST.','<span data-k="pw"></span>')+
 field('Sync word',txt('radio.lora.sync',{ph:'0x12',re:'^0x[0-9A-Fa-f]{1,2}$'}),'Packets with a different sync word are ignored. 0x12 is private, 0x34 is LoRaWAN.')+
 field('Preamble length',num('radio.lora.preamble',{min:6,max:65535,unit:'sym'}),'Symbols sent before each packet. Longer preambles improve detection.')+
-field('Payload length',num('radio.lora.payload',{min:1,max:255,unit:'B',dis:false}),'Bytes per packet. 10 channels × 11 bits fits in 14 B plus header.')+
+field('Payload length',num('radio.lora.payload',{min:1,max:255,unit:'B',dis:false}),'Bytes per packet. The v10 firmware sends 25 B: 10 × uint16 channels, RSSI byte and a 32-bit sequence number.')+
 field('CRC',tog('radio.lora.crc',{text:'Payload CRC'}),'Detect corrupted packets.')+
 field('Implicit header',tog('radio.lora.implicit',{text:'Implicit header mode',rr:0}),'Skips the header for shorter airtime. Both ends must agree on length and coding rate. Required for SF6.')+
 '</div></div></section>'+
@@ -711,7 +711,7 @@ set1('lb',c.lb.toFixed(1)+' dB');
 set1('range',c.range<1?(c.range*1000).toFixed(0)+' m':c.range.toFixed(1)+' km');
 const rb=$('[data-k=rbar]');if(rb)rb.style.width=clamp(Math.log10(c.range*1000)/4*100,2,100)+'%';
 set1('sf6',l.sf===6&&!l.implicit?'SF6 needs implicit header':'');
-set1('pw',l.power>10?'EU 433 MHz limit is typically 10 dBm ERP':'');
+set1('pw',l.power===20?'+20 dBm uses PA_DAC. The chip limits it to about 1 % duty cycle':l.power>17?'RadioLib accepts 2 to 17 or 20 dBm only':l.power>10?'EU 433 MHz limit is typically 10 dBm ERP':'');
 let w='';
 if(c.f<433.05||c.f>434.79)w+='<div class="note warn">Frequency is outside the common 433.05 – 434.79 MHz ISM band. Check your local regulations.</div>';
 if(l.sf===6&&!l.implicit)w+='<div class="note bad" style="margin-top:8px">SF6 requires implicit header mode. Enable it or choose SF7 or higher.</div>';
@@ -961,7 +961,7 @@ card('Device info','<div class="stack" style="gap:12px">'+field('Device name',tx
 card('Bind receiver','<ol class="steps"><li><span>Power the receiver within one metre of the transmitter.</span></li><li><span>Press <b>Start bind</b>. The transmitter broadcasts its pairing request.</span></li><li><span>The receiver answers with its MAC address. Confirm it matches the Radio Protocol page.</span></li></ol><div class="acts" style="margin-top:14px"><button class="btn pri" data-act="bind">Start bind</button></div>')+
 '</div><div class="stack">'+
 card('Configuration','<div class="stack" style="gap:12px"><div class="acts"><button class="btn" data-act="export">Export config.json</button><button class="btn" data-act="import">Import config…</button></div><div class="sep"></div><div class="lab">Danger zone</div><div class="acts"><button class="btn dan" data-act="factory">Reset everything to defaults</button></div></div>')+
-card('Firmware update (OTA)','<div class="stack" style="gap:10px"><input type="file" id="otaFile" accept=".bin" style="color:var(--mut)"><div class="acts"><button class="btn pri" data-act="ota" id="otaBtn" disabled>Upload and flash</button><span class="hint mono" id="otaTxt"></span></div><div class="prog"><i id="otaBar"></i></div></div>')+
+card('Firmware update (OTA)','<div class="stack" style="gap:10px"><div class="note'+(location.protocol==='file:'?' warn':'')+'">'+(location.protocol==='file:'?'Demo mode: this page was opened from a file, so no device is connected and flashing is simulated. Serve it from the transmitter to flash for real.':'Uploads the .bin to this device at <span class="mono">/update</span> as multipart field <span class="mono">firmware</span>. The device must reply <span class="mono">OK</span>.')+' The transmitter stops sending while it updates, so keep the aircraft disarmed with props off.</div><input type="file" id="otaFile" accept=".bin" style="color:var(--mut)"><div class="acts"><button class="btn pri" data-act="ota" id="otaBtn" disabled>Upload and flash</button><span class="hint mono" id="otaTxt"></span></div><div class="prog"><i id="otaBar"></i></div></div>')+
 '</div></div>'+
 card('Debug console','<div class="acts" style="margin-bottom:10px;justify-content:space-between"><div class="acts"><span class="dim" style="font-size:11px;letter-spacing:.08em;text-transform:uppercase">Log level</span><div style="width:160px">'+sel('system.log',LV.map((n,i)=>[i,n[0]+n.slice(1).toLowerCase()]))+'</div></div><button class="btn" data-act="clearlog">Clear</button></div><div class="console" id="con"></div>',{cls:'mt',right:'serial · 115200'});
 };
@@ -1191,6 +1191,65 @@ else{markDirtyPage('calibration');openModal({title:'Calibrate all · 3 of 3',bod
 };
 show();
 }
+function otaSet(txt,pct){
+const t=$('#otaTxt'),b=$('#otaBar');
+if(t)t.textContent=txt;
+if(b)b.style.width=pct+'%';
+}
+function otaEnable(on){const b=$('#otaBtn');if(b)b.disabled=!on}
+function otaFail(msg){
+otaSet(msg,0);otaEnable(true);
+log(0,'OTA',msg);toast(msg,'bad');
+}
+function otaDone(){
+sim.rebootUntil=performance.now()+3500;
+log(2,'OTA','flash complete, device rebooting');
+if(location.protocol==='file:'){otaSet('Flashed (demo). Rebooting…',100);otaEnable(true);toast('Demo update finished');return}
+otaSet('Flashed. Waiting for device…',100);
+let n=0;
+setTimeout(()=>{
+const iv=setInterval(()=>{
+n++;
+fetch(location.pathname,{cache:'no-store'}).then(r=>{if(r.ok){clearInterval(iv);otaSet('Device is back online',100);otaEnable(true);log(2,'OTA','device back online');toast('Update complete')}}).catch(()=>{});
+if(n>30){clearInterval(iv);otaSet('No response after 30 s. Check the device.',100);otaEnable(true);toast('Device did not come back','warn')}
+},1000);
+},4000);
+}
+async function otaFlash(){
+const inp=$('#otaFile'),f=inp&&inp.files[0];
+if(!f)return;
+if(!/\.bin$/i.test(f.name))return otaFail('Not a .bin file');
+if(f.size<1024)return otaFail('File is too small to be a firmware image');
+if(f.size>0x1E0000)return otaFail('Image is larger than the biggest OTA slot (1.9 MB)');
+const head=new Uint8Array(await f.slice(0,1).arrayBuffer());
+if(head[0]!==0xE9)return otaFail('Not an ESP32 app image (missing 0xE9 header)');
+otaEnable(false);
+log(2,'OTA','upload started: '+f.name+' ('+f.size+' B)');
+if(location.protocol==='file:'){
+let p=0;
+const iv=setInterval(()=>{p+=2+Math.random()*5;if(p>=100){clearInterval(iv);otaDone()}else otaSet('Uploading '+p.toFixed(0)+' %',p)},120);
+return;
+}
+const xhr=new XMLHttpRequest();
+xhr.open('POST','/update');
+xhr.timeout=180000;
+xhr.upload.onprogress=e=>{if(e.lengthComputable)otaSet('Uploading '+(e.loaded/e.total*100).toFixed(0)+' %',e.loaded/e.total*100)};
+let watch=null;
+xhr.upload.onload=()=>{
+otaSet('Verifying on device…',100);
+watch=setTimeout(()=>{xhr.abort();otaFail('No reply from device after upload. Check it before flying.')},30000);
+};
+xhr.onload=()=>{
+clearTimeout(watch);
+if(xhr.status===200&&/^OK/i.test(xhr.responseText.trim()))otaDone();
+else otaFail('Device rejected the update ('+xhr.status+' '+xhr.responseText.trim().slice(0,60)+')');
+};
+xhr.onerror=()=>{clearTimeout(watch);otaFail('Connection lost during upload')};
+xhr.ontimeout=()=>{clearTimeout(watch);otaFail('Upload timed out')};
+const fd=new FormData();
+fd.append('firmware',f,f.name);
+xhr.send(fd);
+}
 function act(name,el){
 switch(name){
 case'save':save();break;
@@ -1219,7 +1278,7 @@ case'csv':{let s='t_s,protocol,esp_rssi_dbm,lora_rssi_dbm,snr_db,loss_pct,latenc
 case'export':download('transmitter-config.json','application/json',JSON.stringify(cfg,null,2));toast('Config exported');break;
 case'import':$('#importFile').click();break;
 case'factory':openModal({title:'Reset everything',body:'<p>All pages return to factory defaults and any saved changes are lost.</p>',buttons:[{label:'Cancel'},{label:'Reset all',cls:'dan',fn:()=>{cfg=defaults();saved=clone(cfg);dirty={};capture={};navDirty();renderPage();log(1,'CFG','factory reset');toast('Factory defaults restored','warn')}}]});break;
-case'ota':{const bar=$('#otaBar');let p=0;$('#otaBtn').disabled=true;log(2,'OTA','upload started');const iv=setInterval(()=>{p+=2+Math.random()*5;if(p>=100){p=100;clearInterval(iv);$('#otaTxt').textContent='Flashed. Rebooting…';log(2,'OTA','flash complete, rebooting');sim.rebootUntil=performance.now()+3500}else $('#otaTxt').textContent=p.toFixed(0)+' %';bar.style.width=p+'%'},120);break}
+case'ota':otaFlash();break;
 case'clearlog':logs=[];U.system(true);break;
 }
 }
@@ -1281,7 +1340,7 @@ if(u){if(cur==='radio'){if(sim.n%10===0)u(true)}else u(false)}
 }
 
 log(2,'BOOT','ESP32 DevKit v1 starting');
-log(2,'BOOT','SX1278 init ok, 433.175 MHz');
+log(2,'BOOT','SX1278 init ok, 433.000 MHz');
 log(2,'BOOT','ESP-NOW peer added AA:BB:CC:DD:EE:FF');
 log(2,'LINK','active protocol: ESP-NOW');
 try{if(localStorage.getItem('txcfg.col')){$('#app').classList.add('col');$('#collapse svg').innerHTML='<polyline points="9 18 15 12 9 6"/>'}}catch(x){}
