@@ -20,6 +20,8 @@
 #define SBUS_CH_MAX    1811
 
 #define BINDING_PHRASE "my_drone_link"
+
+static const uint8_t transmitterMAC[6] = {0x10, 0x06, 0x1C, 0xF6, 0x7B, 0x10};
 #define FHSS_NUM_CH    3
 #define FHSS_SEQ_LEN   255
 #define HOP_TIMEOUT_MS 15
@@ -121,6 +123,7 @@ void hopFhss() {
 void IRAM_ATTR loraISR() { loraRxDone = true; }
 
 void onEspNowRecv(const uint8_t *mac, const uint8_t *data, int len) {
+    if (memcmp(mac, transmitterMAC, 6) != 0) return;
     if (len != sizeof(RCPacket)) return;
     RCPacket p;
     memcpy(&p, data, sizeof(RCPacket));
