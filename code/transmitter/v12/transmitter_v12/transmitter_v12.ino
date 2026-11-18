@@ -107,7 +107,7 @@ input,select{width:100%;padding:8px;margin:3px 0 12px;background:#222;color:#eee
 <label>TX Power</label>
 <select id="pwr"><option value="17">17 dBm</option><option value="20">20 dBm</option></select>
 <label>Packet Rate</label>
-<select id="rt"><option value="100">100 Hz</option><option value="50">50 Hz</option><option value="25">25 Hz</option></select>
+<select id="rt"><option value="250">250 Hz</option><option value="100">100 Hz</option><option value="50">50 Hz</option><option value="25">25 Hz</option></select>
 <label>Receiver MAC (e.g. 58:E6:C5:16:4A:58)</label>
 <input id="mc" type="text">
 <button class="btn" onclick="save()">Save &amp; Restart</button>
